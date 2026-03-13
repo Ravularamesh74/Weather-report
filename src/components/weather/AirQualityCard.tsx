@@ -1,50 +1,99 @@
-import { currentWeather } from "@/data/weatherData";
-import { Wind } from "lucide-react";
+import React from "react";
 
-const AirQualityCard = () => {
-  const aq = currentWeather.airQuality;
-
-  const getColor = (index: number) => {
-    if (index <= 50) return "text-success";
-    if (index <= 100) return "text-accent";
-    return "text-destructive";
-  };
-
-  return (
-    <div className="glass-card p-5">
-      <div className="flex items-center gap-2 mb-4">
-        <Wind size={14} className="text-muted-foreground" />
-        <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Air Quality
-        </h2>
-      </div>
-      <div className="flex items-end gap-3 mb-4">
-        <span className={`font-mono text-4xl font-bold ${getColor(aq.index)}`}>{aq.index}</span>
-        <span className={`text-sm font-medium mb-1 ${getColor(aq.index)}`}>{aq.label}</span>
-      </div>
-      <div className="w-full h-2 rounded-full bg-muted/60 mb-4 overflow-hidden">
-        <div
-          className="h-full rounded-full bg-gradient-to-r from-success via-accent to-destructive"
-          style={{ width: `${(aq.index / 300) * 100}%` }}
-        />
-      </div>
-      <div className="grid grid-cols-2 gap-2">
-        <PollutantStat label="PM2.5" value={aq.pm25} unit="µg/m³" />
-        <PollutantStat label="PM10" value={aq.pm10} unit="µg/m³" />
-        <PollutantStat label="O₃" value={aq.o3} unit="ppb" />
-        <PollutantStat label="NO₂" value={aq.no2} unit="ppb" />
-      </div>
-    </div>
-  );
+type Pollutants = {
+  pm2_5: number;
+  pm10: number;
+  no2: number;
+  so2: number;
+  o3: number;
+  co: number;
 };
 
-const PollutantStat = ({ label, value, unit }: { label: string; value: number; unit: string }) => (
-  <div className="bg-muted/30 rounded-lg px-3 py-2">
-    <p className="text-[11px] text-muted-foreground uppercase tracking-wider">{label}</p>
-    <p className="font-mono text-sm font-semibold text-foreground">
-      {value} <span className="text-[10px] text-muted-foreground font-normal">{unit}</span>
-    </p>
-  </div>
-);
+type AirQualityCardProps = {
+  aqi: number;
+  pollutants: Pollutants;
+  location: string;
+  trend?: "up" | "down" | "stable";
+};
 
-export default AirQualityCard;
+const aqiLevels = [
+  { label: "Good", color: "#22c55e", range: "0-50" },
+  { label: "Moderate", color: "#eab308", range: "51-100" },
+  { label: "Unhealthy for Sensitive", color: "#f97316", range: "101-150" },
+  { label: "Unhealthy", color: "#ef4444", range: "151-200" },
+  { label: "Very Unhealthy", color: "#8b5cf6", range: "201-300" },
+  { label: "Hazardous", color: "#7f1d1d", range: "301+" }
+];
+
+function getAQILevel(aqi: number) {
+  if (aqi <= 50) return aqiLevels[0];
+  if (aqi <= 100) return aqiLevels[1];
+  if (aqi <= 150) return aqiLevels[2];
+  if (aqi <= 200) return aqiLevels[3];
+  if (aqi <= 300) return aqiLevels[4];
+  return aqiLevels[5];
+}
+
+export default function AirQualityCard({
+  aqi,
+  pollutants,
+  location,
+  trend = "stable"
+}: AirQualityCardProps) {
+  const level = getAQILevel(aqi);
+
+  const trendIcon =
+    trend === "up" ? "⬆️"
+      : trend === "down" ? "⬇️"
+      : "➖";
+
+  return (
+    <div className="aqi-card">
+
+      <div className="aqi-header">
+        <h3>Air Quality</h3>
+        <span>{location}</span>
+      </div>
+
+      <div className="aqi-main">
+
+        <div
+          className="aqi-score"
+          style={{ backgroundColor: level.color }}
+        >
+          {aqi}
+        </div>
+
+        <div className="aqi-info">
+          <h4>{level.label}</h4>
+          <p>Range {level.range}</p>
+          <span className="aqi-trend">
+            Trend {trendIcon}
+          </span>
+        </div>
+
+      </div>
+
+      <div className="pollutants-grid">
+
+        <Pollutant name="PM2.5" value={pollutants.pm2_5} />
+        <Pollutant name="PM10" value={pollutants.pm10} />
+        <Pollutant name="NO₂" value={pollutants.no2} />
+        <Pollutant name="SO₂" value={pollutants.so2} />
+        <Pollutant name="O₃" value={pollutants.o3} />
+        <Pollutant name="CO" value={pollutants.co} />
+
+      </div>
+
+    </div>
+  );
+}
+
+function Pollutant({ name, value }: { name: string; value: number }) {
+  return (
+    <div className="pollutant-item">
+      <span className="pollutant-name">{name}</span>
+      <span className="pollutant-value">{value}</span>
+    </div>
+  );
+}
