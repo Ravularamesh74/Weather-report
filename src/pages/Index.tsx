@@ -10,6 +10,7 @@ import WindCard from "@/components/weather/WindCard";
 import SunriseSunset from "@/components/weather/SunriseSunset";
 import WeatherAlerts from "@/components/weather/WeatherAlerts";
 import RadarPreview from "@/components/weather/RadarPreview";
+import { currentWeather } from "@/data/weatherData";
 import { Cloud } from "lucide-react";
 
 const Index = () => {
@@ -44,7 +45,22 @@ const Index = () => {
           {/* Center Column */}
           <main className="lg:col-span-7 space-y-4">
             <WeatherAlerts />
-            <CurrentConditions />
+            <CurrentConditions
+              data={{
+                location: currentWeather.location,
+                temperature: currentWeather.temp,
+                feelsLike: currentWeather.feelsLike,
+                condition: currentWeather.condition,
+                icon: "partly-cloudy", // fallback string
+                humidity: currentWeather.humidity,
+                windSpeed: currentWeather.windSpeed,
+                pressure: currentWeather.pressure,
+                visibility: currentWeather.visibility,
+                uvIndex: currentWeather.uvIndex,
+                sunrise: currentWeather.sunrise,
+                sunset: currentWeather.sunset,
+              }}
+            />
             <HourlyForecast />
             <TemperatureChart />
             <DailyForecast />
@@ -53,7 +69,18 @@ const Index = () => {
           {/* Right Column */}
           <aside className="lg:col-span-3 space-y-4">
             <RadarPreview />
-            <AirQualityCard />
+            <AirQualityCard
+              aqi={currentWeather.airQuality.index}
+              location={currentWeather.location}
+              pollutants={{
+                pm2_5: currentWeather.airQuality.pm25,
+                pm10: currentWeather.airQuality.pm10,
+                no2: currentWeather.airQuality.no2,
+                so2: 0.5, // Mocking missing values
+                o3: currentWeather.airQuality.o3,
+                co: 0.2,   // Mocking missing values
+              }}
+            />
             <UVIndexCard />
             <WindCard />
             <SunriseSunset />

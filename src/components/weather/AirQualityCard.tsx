@@ -40,6 +40,7 @@ export default function AirQualityCard({
   location,
   trend = "stable"
 }: AirQualityCardProps) {
+  if (!pollutants) return null;
   const level = getAQILevel(aqi);
 
   const trendIcon =

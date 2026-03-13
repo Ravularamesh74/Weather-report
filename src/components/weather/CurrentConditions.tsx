@@ -20,12 +20,14 @@ type Props = {
 };
 
 export default function CurrentConditions({ data }: Props) {
+  if (!data) return null;
+
   return (
     <div className="current-card">
 
       <div className="current-header">
-        <h2>{data.location}</h2>
-        <p>{data.condition}</p>
+        <h2>{data.location || "N/A"}</h2>
+        <p>{data.condition || "N/A"}</p>
       </div>
 
       <div className="current-main">

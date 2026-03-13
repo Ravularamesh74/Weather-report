@@ -1,7 +1,56 @@
+/* ---------- Weather Types ---------- */
+
+export type WeatherCondition =
+  | "sunny"
+  | "clear"
+  | "partly-cloudy"
+  | "cloudy"
+  | "rain"
+  | "drizzle"
+  | "snow"
+  | "thunder"
+  | "windy"
+  | "night";
+
+export interface AirQuality {
+  index: number;
+  label: string;
+  pm25: number;
+  pm10: number;
+  o3: number;
+  no2: number;
+}
+
+export interface CurrentWeather {
+  location: string;
+  temp: number;
+  feelsLike: number;
+  condition: string;
+
+  high: number;
+  low: number;
+
+  humidity: number;
+  dewPoint: number;
+  pressure: number;
+  visibility: number;
+
+  uvIndex: number;
+
+  windSpeed: number;
+  windDirection: string;
+  windGust: number;
+
+  sunrise: string;
+  sunset: string;
+
+  airQuality: AirQuality;
+}
+
 export interface HourlyForecast {
   time: string;
   temp: number;
-  icon: string;
+  icon: WeatherCondition;
   precipitation: number;
   wind: number;
 }
@@ -11,7 +60,7 @@ export interface DailyForecast {
   date: string;
   high: number;
   low: number;
-  icon: string;
+  icon: WeatherCondition;
   precipitation: number;
   condition: string;
 }
@@ -24,23 +73,31 @@ export interface SavedLocation {
   condition: string;
 }
 
-export const currentWeather = {
+/* ---------- Mock Data ---------- */
+
+export const currentWeather: CurrentWeather = {
   location: "San Francisco, CA",
   temp: 68,
   feelsLike: 65,
-  condition: "Partly Cloudy",
+  condition: "partly-cloudy",
+
   high: 72,
   low: 58,
+
   humidity: 62,
   dewPoint: 54,
   pressure: 1013.2,
   visibility: 10,
+
   uvIndex: 6,
+
   windSpeed: 12,
   windDirection: "NW",
   windGust: 18,
+
   sunrise: "6:42 AM",
   sunset: "7:18 PM",
+
   airQuality: {
     index: 42,
     label: "Good",
@@ -64,18 +121,6 @@ export const hourlyForecast: HourlyForecast[] = [
   { time: "9 PM", temp: 62, icon: "rain", precipitation: 65, wind: 11 },
   { time: "10 PM", temp: 61, icon: "rain", precipitation: 72, wind: 10 },
   { time: "11 PM", temp: 60, icon: "rain", precipitation: 60, wind: 9 },
-  { time: "12 AM", temp: 59, icon: "cloudy", precipitation: 40, wind: 8 },
-  { time: "1 AM", temp: 58, icon: "cloudy", precipitation: 25, wind: 7 },
-  { time: "2 AM", temp: 58, icon: "clear", precipitation: 10, wind: 6 },
-  { time: "3 AM", temp: 57, icon: "clear", precipitation: 5, wind: 5 },
-  { time: "4 AM", temp: 57, icon: "clear", precipitation: 3, wind: 5 },
-  { time: "5 AM", temp: 56, icon: "clear", precipitation: 2, wind: 4 },
-  { time: "6 AM", temp: 56, icon: "partly-cloudy", precipitation: 5, wind: 6 },
-  { time: "7 AM", temp: 58, icon: "partly-cloudy", precipitation: 8, wind: 8 },
-  { time: "8 AM", temp: 60, icon: "sunny", precipitation: 5, wind: 10 },
-  { time: "9 AM", temp: 63, icon: "sunny", precipitation: 3, wind: 11 },
-  { time: "10 AM", temp: 65, icon: "sunny", precipitation: 2, wind: 12 },
-  { time: "11 AM", temp: 67, icon: "partly-cloudy", precipitation: 5, wind: 12 },
 ];
 
 export const dailyForecast: DailyForecast[] = [
@@ -85,18 +130,16 @@ export const dailyForecast: DailyForecast[] = [
   { day: "Sun", date: "Mar 16", high: 66, low: 54, icon: "cloudy", precipitation: 40, condition: "Mostly Cloudy" },
   { day: "Mon", date: "Mar 17", high: 69, low: 56, icon: "partly-cloudy", precipitation: 20, condition: "Partly Cloudy" },
   { day: "Tue", date: "Mar 18", high: 71, low: 57, icon: "sunny", precipitation: 5, condition: "Sunny" },
-  { day: "Wed", date: "Mar 19", high: 73, low: 59, icon: "sunny", precipitation: 3, condition: "Clear" },
-  { day: "Thu", date: "Mar 20", high: 70, low: 56, icon: "partly-cloudy", precipitation: 15, condition: "Partly Cloudy" },
-  { day: "Fri", date: "Mar 21", high: 68, low: 55, icon: "cloudy", precipitation: 30, condition: "Overcast" },
-  { day: "Sat", date: "Mar 22", high: 67, low: 54, icon: "rain", precipitation: 60, condition: "Showers" },
 ];
 
 export const savedLocations: SavedLocation[] = [
-  { id: "1", name: "San Francisco", country: "US", temp: 68, condition: "Partly Cloudy" },
-  { id: "2", name: "New York", country: "US", temp: 55, condition: "Overcast" },
-  { id: "3", name: "London", country: "UK", temp: 48, condition: "Rain" },
-  { id: "4", name: "Tokyo", country: "JP", temp: 62, condition: "Clear" },
-  { id: "5", name: "Sydney", country: "AU", temp: 77, condition: "Sunny" },
+  { id: "1", name: "San Francisco", country: "US", temp: 68, condition: "partly-cloudy" },
+  { id: "2", name: "New York", country: "US", temp: 55, condition: "cloudy" },
+  { id: "3", name: "London", country: "UK", temp: 48, condition: "rain" },
+  { id: "4", name: "Tokyo", country: "JP", temp: 62, condition: "clear" },
+  { id: "5", name: "Sydney", country: "AU", temp: 77, condition: "sunny" },
+  { id: "6", name: "Toronto", country: "CA", temp: 52, condition: "cloudy" },
+  { id: "7", name: "Mumbai", country: "IN", temp: 84, condition: "sunny" },
 ];
 
 export const precipitationData = hourlyForecast.map(h => ({
